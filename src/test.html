@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smartgarden</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.6.20/dist/css/uikit.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js" crossorigin></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <div class="uk-section uk-section-small">
+        <div class="uk-container">
+            <canvas style="height: 80vh;" id="chart"></canvas>
+            <script>
+                var ctx = document.getElementById('chart').getContext('2d');
+                var options = {
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return `${value} °C`;
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return `${value} %`;
+                                }
+                            },
+                            // grid line settings
+                            grid: {
+                                drawOnChartArea: false, // only want the grid lines for one axis to show up
+                            }
+                        }
+                    }
+                };
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [1, 2, 3, 4, 5, 6, 7],
+                        datasets: [{
+                            label: 'Temperature 1',
+                            data: [-12, 19, -3, 5, 2, 3, 4],
+                            yAxisID: 'y',
+                            backgroundColor: 'rgba(255, 0, 0, 0.3)',
+                            borderColor: 'rgba(255, 0, 0, 0.4)',
+                        }, {
+                            label: 'Temperature 2',
+                            data: [12, -19, 3, -5, -2, -3, -4],
+                            yAxisID: 'y',
+                            backgroundColor: 'rgba(0, 255, 0, 0.3)',
+                            borderColor: 'rgba(0, 255, 0, 0.4)',
+                        }, {
+                            label: 'Moist',
+                            data: [0, 40, 20, 35, 40, 75, 100],
+                            yAxisID: 'y1',
+                            backgroundColor: 'rgba(0, 0, 255, 0.3)',
+                            borderColor: 'rgba(0, 0, 255, 0.4)',
+                            fill: true
+                        }]
+                    },
+                    options: options
+                });
+            </script>
+        </div>
+    </div>
+    <div class="uk-section uk-section-small">
+        <div class="uk-container">
+            <h2 class="uk-heading-line uk-text-center"><span>Dashboard</span></h2>
+            <div class="uk-child-width-1-2 uk-grid-small uk-grid-match uk-text-center" uk-grid>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <span class="uk-display-block uk-text-large"><i class="fas fa-temperature-high"></i></span>
+                        <span class="uk-h4">1 °C</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <span class="uk-display-block uk-text-large"><i class="fas fa-temperature-high"></i></span>
+                        <span class="uk-h4">12 °C</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <span class="uk-display-block uk-text-large"><i class="fas fa-water"></i></span>
+                        <span class="uk-h4">80%</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <span class="uk-display-block uk-text-large"><i class="fas fa-power-off"></i></span>
+                        <span class="uk-h4">An</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="uk-container uk-margin-top">
+            <button class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"><i
+                    class="fas fa-chart-area"></i> Details</button>
+        </div>
+        <div class="uk-container">
+            <button class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom"><i
+                    class="fas fa-hand-holding-water"></i> Bewässerung</button>
+        </div>
+    </div>
+    
+    <div class="uk-section uk-section-small uk-section-muted">
+        <div class="uk-container">
+            <h2 class="uk-heading-line uk-text-center"><span>Gartenmonat</span></h2>
+            <div class="uk-position-relative uk-visible-toggle uk-dark" tabindex="-1" uk-slider="center: true">
+
+                <ul class="uk-slider-items uk-grid">
+                    <li class="uk-width-3-4">
+                        <div class="uk-card uk-card-default">
+                            <div class="uk-card-media-top">
+                                <img src="images/light.jpg" alt="">
+                            </div>
+                            <div class="uk-card-body">
+                                <h3 class="uk-card-title">April</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt.</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="uk-width-3-4">
+                        <div class="uk-card uk-card-default">
+                            <div class="uk-card-media-top">
+                                <img src="images/light.jpg" alt="">
+                            </div>
+                            <div class="uk-card-body">
+                                <h3 class="uk-card-title">Mai</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt.</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous
+                    uk-slider-item="previous"></a>
+                <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next
+                    uk-slider-item="next"></a>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/f2b8654a74.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.6.20/dist/js/uikit.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <script type="module">
+        import ble from './js/ble-mock.js'
+
+        window.ble = ble;
+    </script>
+    <!--script src="js/index.js" data-type="module" type="text/babel"></script-->
+</body>
+
+</html>
