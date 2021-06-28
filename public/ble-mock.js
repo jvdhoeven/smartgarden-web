@@ -31,27 +31,30 @@ function convertToNativeJS(object) {
     });
 }
 
-// set of auto-connected device ids
-var autoconnected = {};
-
-var connectedDevice = null;
-
 var notification = [];
+var scanInterval = null;
 
-export default {
+const bleInterface = {
     scan: function (services, seconds, success, failure) {
         
     },
 
     startScan: function (services, success, failure) {
         console.log('startScan');
-        setTimeout(() => {
-            success({"name":"Smartgarden Fake","id":"DC:A6:32:99:C4:53","advertising":{},"rssi":-59});
+        var i = 1;
+        scanInterval = setInterval(() => {
+            if(i > 10) {
+                return;
+            }
+            success({'name':`Smartgarden Fake ${i}`,"id":"DC:A6:32:99:C4:53","advertising":{},"rssi":-59});
+            i++;
         }, 2000);
     },
 
     stopScan: function (success, failure) {
-       success();
+        console.log('stopScan');
+        success();
+        clearInterval(scanInterval);
     },
 
     startScanWithOptions: function(services, options, success, failure) {
@@ -79,6 +82,7 @@ export default {
     },
 
     connect: function (device_id, success, failure) {
+        console.log('connect');
         const peripheral = {
             "name": "Smartgarden",
             "id": "DC:A6:32:99:C4:53",
@@ -193,6 +197,7 @@ export default {
 
     // success callback is called on notification
     startNotification: function (device_id, service_uuid, characteristic_uuid, success, failure) {
+        console.log('startNotification');
         notification[characteristic_uuid] = setInterval(() => {
             if(characteristic_uuid === '9a0c0611-a48f-4dbc-bde2-31582e606ee5') {
                 success(stringToArrayBuffer(`${Number(Math.random() * 100).toFixed(2)}`));
@@ -204,6 +209,7 @@ export default {
 
     // success callback is called when the descriptor 0x2902 is written
     stopNotification: function (device_id, service_uuid, characteristic_uuid, success, failure) {
+        console.log('stopNotification');
         clearInterval(notification[characteristic_uuid]);
     },
 
@@ -236,4 +242,7 @@ export default {
 
     }
 
+
 };
+
+export default bleInterface;

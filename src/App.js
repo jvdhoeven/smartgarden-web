@@ -1,79 +1,97 @@
 import React, { useEffect, useState } from 'react';
 import {
-    BrowserRouter as Router,
     Switch,
-    Route
+    Route,
+    useHistory,
+    useLocation
 } from "react-router-dom";
-import 'uikit/dist/js/uikit.min.js';
 import './App.scss';
-import DiagramContainer from './Containers/Diagram';
+import { SERVICE_UUID } from './constants';
 import HomeContainer from './Containers/Home';
+import SettingsContainer from './Containers/Settings';
+import StartContainer from './Containers/Start';
 import WateringContainer from './Containers/Watering';
 
 function App() {
+    const history = useHistory();
+    const location = useLocation();
+    const sessionDevice = JSON.parse(sessionStorage.getItem('deviceId'));
+
+    // App state
+    const [isScanning, setIsScanning] = useState(false);
+    const [connected, setConnected] = useState(false);
+    const [device, setDevice] = useState(null);
+    const [selectedDevice, setSelectedDevice] = useState(sessionDevice);
     const [devices, setDevices] = useState([]);
-    const [peripheral, setPeripheral] = useState(null);
-    const [notificationOn, setNotificationOn] = useState(false);
-    const [temperature, setTemperature] = useState(null);
-    const [temperatureGround, setTemperatureGround] = useState(null);
-    const [moisture, setMoisture] = useState(null);
-    const [watering, setWatering] = useState(null);
 
+    // If a device is stored in localStorage, we can directly navigate to home page
     useEffect(() => {
-        window.ble.startScan(["4fafc201-1fb5-459e-8fcc-c5c9c331914b"], (device) => {
-            console.log('found devices', device)
-            setDevices([device]);
+        if (connected) {
+            sessionStorage.setItem('deviceId', JSON.stringify(selectedDevice));
+            if(location.pathname === '/') {
+                history.push('/home');
+            }
+        }
+    }, [connected, selectedDevice, history, location])
+
+    // If no device is stored in localStorage but user navigated to a route that needs device information, we redirect to device selection page
+    useEffect(() => {
+        if (!selectedDevice && location.pathname !== '/') {
+            history.push('/');
+        }
+    }, [history, selectedDevice, location]);
+
+    // if device was selected, stop scanning
+    useEffect(() => {
+        if (selectedDevice && isScanning) {
             window.ble.stopScan(() => { }, () => { });
+        }
+    }, [selectedDevice, isScanning]);
 
-            window.ble.connect(device.id, (peripheral) => {
-                console.log('connected', peripheral)
-                setPeripheral(peripheral);
+    // if device was selected from the list, setup the connection to the device
+    useEffect(() => {
+        if (selectedDevice) {
+            setIsScanning(false);
+            // connect to the selected device
+            window.ble.connect(selectedDevice.id, () => {
+                setConnected(true);
+            });
+        }
+    }, [selectedDevice]);
 
-                window.ble.startNotification(device.id, "4fafc201-1fb5-459e-8fcc-c5c9c331914b", "beb5483e-36e1-4688-b7f5-ea07361b26a8", (data) => {
-                    setNotificationOn(true);
-                    const value = String.fromCharCode.apply(null, new Uint8Array(data));
-
-                    setTemperature(value);
-                }, () => { })
-
-                window.ble.startNotification(device.id, "4fafc201-1fb5-459e-8fcc-c5c9c331914b", "a10b02a4-3b1c-45b5-a617-5648120f8e4c", (data) => {
-                    setNotificationOn(true);
-                    const value = String.fromCharCode.apply(null, new Uint8Array(data));
-
-                    setTemperatureGround(value);
-                }, () => { })
-
-                window.ble.startNotification(device.id, "4fafc201-1fb5-459e-8fcc-c5c9c331914b", "9a0c0611-a48f-4dbc-bde2-31582e606ee5", (data) => {
-                    setNotificationOn(true);
-                    const value = String.fromCharCode.apply(null, new Uint8Array(data));
-
-                    setMoisture(value);
-                }, () => { })
-
-                window.ble.startNotification(device.id, "4fafc201-1fb5-459e-8fcc-c5c9c331914b", "c3134125-b92d-479f-a437-2de8cea412e7", (data) => {
-                    setNotificationOn(true);
-                    const value = String.fromCharCode.apply(null, new Uint8Array(data));
-
-                    setWatering(value);
-                }, () => { })
+    // if there is no selectedDevice yet, we initialize the scan for devices
+    useEffect(() => {
+        if (!selectedDevice) {
+            setIsScanning(true);
+            // ble.startScan calls success callback everytime it finds a device that provides the service
+            window.ble.startScan([SERVICE_UUID], (device) => {
+                setDevice(device);
             }, () => { });
-        }, () => { });
-    }, []);
+        }
+    }, [selectedDevice]);
+
+    // append scanned device to device list
+    useEffect(() => {
+        if (device) {
+            setDevices((devices) => [...devices, device]);
+        }
+    }, [device]);
 
     return (
-        <Router>
-            <Switch>
-                <Route path="/details">
-                    <DiagramContainer temperature={temperature} temperatureGround={temperatureGround} moisture={moisture} watering={watering} />
-                </Route>
-                <Route path="/watering">
-                    <WateringContainer />
-                </Route>
-                <Route path="/">
-                    <HomeContainer peripheral={peripheral} temperature={temperature} temperatureGround={temperatureGround} moisture={moisture} watering={watering} />
-                </Route>
-            </Switch>
-        </Router>
+        <Switch>
+            <Route exact path="/watering">
+                <WateringContainer />
+            </Route>
+            <Route exact path="/settings">
+                <SettingsContainer />
+            </Route>
+            <Route exact path="/home">
+                <HomeContainer connected={connected} device={selectedDevice} />
+            </Route>
+            <Route exact path="/">
+                <StartContainer devices={devices} selectDevice={setSelectedDevice} />
+            </Route>
+        </Switch>
     );
 }
 

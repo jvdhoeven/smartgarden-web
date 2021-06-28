@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 function Dashboard(props) {
-    const { peripheral, temperature, temperatureGround, moisture, watering } = props;
+    const { temperature, temperatureGround, moisture, watering } = props;
     return (
         <div className="uk-section uk-section-small">
             <div className="uk-container">
                 <h2 className="uk-heading-line uk-text-center"><span>Dashboard</span></h2>
-                { peripheral && <div className="uk-child-width-1-2 uk-grid-small uk-grid-match uk-text-center" uk-grid="true">
+                <div className="uk-child-width-1-2 uk-grid-small uk-grid-match uk-text-center" uk-grid="true">
                     <div>
                         <div className="uk-card uk-card-default uk-card-body">
                             <span className="uk-display-block uk-text-large"><i className="fas fa-temperature-high"></i></span>
@@ -32,15 +32,11 @@ function Dashboard(props) {
                             <span className="uk-h4">{watering}</span>
                         </div>
                     </div>
-                </div>}
-                { !peripheral && <div className="uk-text-center">
-                    <span uk-spinner="ratio: 4.5"></span>
-                </div>}
+                </div>
             </div>
             <div className="uk-container uk-margin-top">
-                <Link className="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" to="/details" uk-toggle="true">
-                    { peripheral && <span><i className="fas fa-chart-area"></i> Details</span> }
-                    { !peripheral && <span uk-spinner="ratio: 0.5"></span> }
+                <Link className="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" to="/home/details" uk-toggle="true">
+                    <span><i className="fas fa-chart-area"></i> Details</span>
                 </Link>
             </div>
             <div className="uk-container">

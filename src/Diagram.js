@@ -81,6 +81,7 @@ function Diagram(props) {
             chart.data.datasets[2].data = moist.slice(Math.max(moist.length - 20, 0));
             chart.update();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [temperature]);
 
     return (

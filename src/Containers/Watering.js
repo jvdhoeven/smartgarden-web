@@ -1,11 +1,26 @@
 import React, { Fragment, useState } from 'react';
 
 function WateringContainer() {
-    const [profile, setProfile] = useState(0);
+    const [selectedProfile, setProfile] = useState(0);
+
+    const [inputs, setInputs] = useState({
+        startTime: '12:00',
+        duration: 360,
+        interval: 0,
+        smart: false
+    });
 
     function handleSelectChange(event) {
         setProfile(event.target.value);
     }
+
+    const handleInputChange = (event) => { setInputs(inputs => ({...inputs, [event.target.name]: event.target.value})); }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        console.log(inputs);
+    };
 
     return (
         <Fragment>
@@ -16,7 +31,7 @@ function WateringContainer() {
                         <div>
                             <label className="uk-form-label">Profile</label>
                             <div className="uk-form-controls">
-                                <select value={profile} onChange={handleSelectChange} name="profile" className="uk-select">
+                                <select value={selectedProfile} onChange={handleSelectChange} name="profile" className="uk-select">
                                     <option value="0">Bitte wählen</option>
                                     <option value="1">Profil 1</option>
                                     <option value="2">Profil 2</option>
@@ -27,26 +42,26 @@ function WateringContainer() {
                     </form>
                 </div>
             </div>
-            { profile > 0 && <div className="uk-section uk-section-small">
+            { selectedProfile > 0 && <div className="uk-section uk-section-small">
                 <div className="uk-container">
-                    <h3 className="uk-heading-line uk-text-center"><span>Profil {profile}</span></h3>
-                    <form className="uk-form-stacked">
+                    <h3 className="uk-heading-line uk-text-center"><span>Profil {selectedProfile}</span></h3>
+                    <form className="uk-form-stacked" onSubmit={handleSubmit}>
                         <div className="uk-margin">
                             <label className="uk-form-label">Startzeit</label>
                             <div className="uk-form-controls">
-                                <input className="uk-input" type="time" placeholder="Input" />
+                                <input className="uk-input" type="time" name="startTime" value={inputs.startTime} onChange={handleInputChange} />
                             </div>
                         </div>
                         <div className="uk-margin">
                             <label className="uk-form-label">Dauer</label>
                             <div className="uk-form-controls">
-                                <input className="uk-input" type="text" placeholder="Input" />
+                                <input className="uk-input" type="text" name="duration" value={inputs.duration} onChange={handleInputChange} />
                             </div>
                         </div>
                         <div className="uk-margin">
                             <label className="uk-form-label">Interval</label>
                             <div className="uk-form-controls">
-                                <select name="interval" className="uk-select">
+                                <select className="uk-select" name="interval" value={inputs.interval} onChange={handleInputChange}>
                                     <option value="0">3 mal täglich</option>
                                     <option value="1">2 mal täglich</option>
                                     <option value="2">1 mal täglich</option>
@@ -59,8 +74,11 @@ function WateringContainer() {
                         <div className="uk-margin">
                             <label className="uk-form-label">Smarte Bewässerung</label>
                             <div className="uk-form-controls">
-                                <input className="uk-checkbox" type="checkbox" /> Sensoren verwenden
+                                <input className="uk-checkbox" name="smart" checked={inputs.smart} onChange={handleInputChange} type="checkbox" /> Sensoren verwenden
                             </div>
+                        </div>
+                        <div className="uk-margin">
+                            <button className="uk-button uk-button-primary" type="submit">Submit</button>
                         </div>
                     </form>
                 </div>

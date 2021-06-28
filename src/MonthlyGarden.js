@@ -34,10 +34,10 @@ function MonthlyGarden() {
                         </li>
                     </ul>
 
-                    <a className="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous="true"
-                        uk-slider-item="previous"></a>
-                    <a className="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next="true"
-                        uk-slider-item="next"></a>
+                    <button className="uk-position-center-left uk-position-small uk-hidden-hover" href="#prev" uk-slidenav-previous="true"
+                        uk-slider-item="previous">&nbsp;</button>
+                    <button className="uk-position-center-right uk-position-small uk-hidden-hover" href="#next" uk-slidenav-next="true"
+                        uk-slider-item="next">&nbsp;</button>
 
                 </div>
             </div>
