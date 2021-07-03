@@ -1,23 +1,64 @@
 import React, { Fragment, useState } from 'react';
 
 function WateringContainer() {
-    const [selectedProfile, setProfile] = useState(0);
+    const [activeProgram, setActiveProgram] = useState(0);
+    const [activeProgramChanged, setActiveProgramChanged] = useState(false);
+    const [selectedProgram, setSelectedProgram] = useState(0);
+    const [programs, setPrograms] = useState([]);
+    //const [editProgram, setEditProgram] = useState(false);
+    const [addProgram, setAddProgram] = useState(false);
 
-    const [inputs, setInputs] = useState({
+    const inputDefaults = {
         startTime: '12:00',
         duration: 360,
         interval: 0,
         smart: false
-    });
+    };
 
-    function handleSelectChange(event) {
-        setProfile(event.target.value);
+    const [inputs, setInputs] = useState(inputDefaults);
+
+    function handleActiveProgramChange(event) {
+        setActiveProgram(event.target.value);
+        setActiveProgramChanged(true);
+    }
+
+    function handleSelectedProgram(event) {
+        setAddProgram(false);
+        setSelectedProgram(event.target.value);
+        setInputs(programs[event.target.value - 1]);
+    }
+
+    const addNewProgram = () => {
+        setAddProgram(true);
+        setSelectedProgram(0);
+        setInputs(inputDefaults);
+    }
+
+    const saveActiveProgram = () => {
+        console.log('should send active program to device', programs[activeProgram - 1]);
+        setActiveProgramChanged(false);
     }
 
     const handleInputChange = (event) => { setInputs(inputs => ({...inputs, [event.target.name]: event.target.value})); }
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if(addProgram) {
+            setPrograms((programs) => ([...programs, {...inputs}]));
+        } else {
+            const currentPrograms = [...programs];
+            currentPrograms[selectedProgram - 1] = {...inputs};
+            setPrograms(currentPrograms);
+
+            if(selectedProgram === activeProgram) {
+                setActiveProgramChanged(true);
+            }
+        }
+
+        setSelectedProgram(0);
+        setAddProgram(false);
+        setInputs(inputDefaults);
 
         console.log(inputs);
     };
@@ -27,24 +68,49 @@ function WateringContainer() {
             <div className="uk-section uk-section-small">
                 <div className="uk-container">
                     <h2 className="uk-heading-line uk-text-center"><span>Bewässerung</span></h2>
-                    <form className="uk-form-stacked">
-                        <div>
-                            <label className="uk-form-label">Profile</label>
+                    { !activeProgram && <div uk-alert="true">
+                        Es ist noch kein Programm aktiv.
+                    </div>}
+                    <form uk-grid="true">
+                        <div className="uk-width-1-1">
+                            <label className="uk-form-label">Aktives Programm</label>
                             <div className="uk-form-controls">
-                                <select value={selectedProfile} onChange={handleSelectChange} name="profile" className="uk-select">
+                                <select value={activeProgram} onChange={handleActiveProgramChange} name="activeProgram" className="uk-select">
+                                { !activeProgram && programs.length === 0 && <option value="0">Keine Programme</option>}
+                                { programs.length > 0 && <>
                                     <option value="0">Bitte wählen</option>
-                                    <option value="1">Profil 1</option>
-                                    <option value="2">Profil 2</option>
-                                    <option value="3">Profil 3</option>
+                                    { programs.map((program, index) => <option key={index+1} value={index+1}>Programm {index+1}</option>) }
+                                </>}
                                 </select>
                             </div>
+                            { activeProgramChanged &&
+                                <button className="uk-button uk-margin-top uk-button-primary uk-width-1-1" type="button" onClick={saveActiveProgram}>Änderung Speichern</button> }
+                        </div>
+                        <div className="uk-width-3-4">
+                            <label className="uk-form-label">Programm bearbeiten</label>
+                            <div className="uk-inline uk-width-1-1">
+                                <select value={selectedProgram} onChange={handleSelectedProgram} name="profile" className="uk-select">
+                                { programs.length === 0 && <option value="0">Keine Programme</option>}
+                                { programs.length > 0 && <>
+                                    <option value="0">Bitte wählen</option>
+                                    { programs.map((program, index) => <option key={index+1} value={index+1}>Programm {index+1}</option>) }
+                                </>}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="uk-width-1-4">
+                            <label className="uk-form-label">&nbsp;</label>
+                            <button className="uk-button uk-button-primary uk-width-1-1 uk-padding-remove-horizontal" type="button" onClick={addNewProgram}><span uk-icon="icon: plus"></span></button>
                         </div>
                     </form>
                 </div>
             </div>
-            { selectedProfile > 0 && <div className="uk-section uk-section-small">
+            { (addProgram || selectedProgram > 0) && <div className="uk-section uk-section-small">
                 <div className="uk-container">
-                    <h3 className="uk-heading-line uk-text-center"><span>Profil {selectedProfile}</span></h3>
+                    <h3 className="uk-heading-line uk-text-center">
+                        { addProgram && <span>Neues Programm</span> }
+                        { selectedProgram > 0 && <span>Programm bearbeiten</span> }
+                    </h3>
                     <form className="uk-form-stacked" onSubmit={handleSubmit}>
                         <div className="uk-margin">
                             <label className="uk-form-label">Startzeit</label>

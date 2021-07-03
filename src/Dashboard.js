@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 function Dashboard(props) {
-    const { temperature, temperatureGround, moisture, watering } = props;
+    const { temperature, temperatureGround, moisture, watering, setShowDiagram } = props;
     return (
         <div className="uk-section uk-section-small">
             <div className="uk-container">
@@ -35,13 +35,17 @@ function Dashboard(props) {
                 </div>
             </div>
             <div className="uk-container uk-margin-top">
-                <Link className="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" to="/home/details" uk-toggle="true">
+                <button className="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" onClick={() => { setShowDiagram(true) }} uk-toggle="true">
                     <span><i className="fas fa-chart-area"></i> Details</span>
-                </Link>
+                </button>
             </div>
             <div className="uk-container">
                 <Link className="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom" to="/watering"><i
                     className="fas fa-hand-holding-water"></i> Bewässerung</Link>
+            </div>
+            <div className="uk-container">
+                <Link className="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom" to="/settings"><i
+                    className="fas fa-hand-holding-water"></i> Einstellungen</Link>
             </div>
         </div>
     );

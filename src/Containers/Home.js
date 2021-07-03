@@ -1,8 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Switch,
-    Route
-} from "react-router-dom";
 import DiagramContainer from '../Containers/Diagram';
 import Dashboard from '../Dashboard';
 import MonthlyGarden from '../MonthlyGarden';
@@ -22,6 +18,8 @@ const getValueFromNotificationData = (data) => {
 function HomeContainer(props) {
     const { connected, device } = props;
 
+    const [showDiagram, setShowDiagram] = useState(false);
+
     const [temperature, setTemperature] = useState(null);
     const [temperatureGround, setTemperatureGround] = useState(null);
     const [moisture, setMoisture] = useState(null);
@@ -29,42 +27,78 @@ function HomeContainer(props) {
 
     useEffect(() => {
         if(connected && device !== null) {
-            window.ble.startNotification(device.id, SERVICE_UUID, CHARACTERISTIC_TEMP, (data) => {
-                setTemperature(getValueFromNotificationData(data));
-            }, () => { });
-
-            window.ble.startNotification(device.id, SERVICE_UUID, CHARACTERISTIC_TEMP_GROUND, (data) => {
-                setTemperatureGround(getValueFromNotificationData(data));
-            }, () => { });
-
-            window.ble.startNotification(device.id, SERVICE_UUID, CHARACTERISTIC_MOISTURE, (data) => {
-                setMoisture(getValueFromNotificationData(data));
-            }, () => { });
-
-            window.ble.startNotification(device.id, SERVICE_UUID, CHARACTERISTIC_VALVE, (data) => {
-                setWatering(getValueFromNotificationData(data));
-            }, () => { });
+            // for some reason startNotification and stopNotification does not work when called synchronously, therefor i
+            // switched to polling with read instead, since it works as expected
+            const readData = () => {
+                window.ble.read(device.id, SERVICE_UUID, CHARACTERISTIC_TEMP, (data) => {
+                    console.log('setTemperature', getValueFromNotificationData(data));
+                    setTemperature(getValueFromNotificationData(data));
+                }, () => { });
+    
+                window.ble.read(device.id, SERVICE_UUID, CHARACTERISTIC_TEMP_GROUND, (data) => {
+                    console.log('setTemperatureGround', getValueFromNotificationData(data));
+                    setTemperatureGround(getValueFromNotificationData(data));
+                }, () => { });
+    
+                window.ble.read(device.id, SERVICE_UUID, CHARACTERISTIC_MOISTURE, (data) => {
+                    console.log('setMoisture', getValueFromNotificationData(data));
+                    setMoisture(getValueFromNotificationData(data));
+                }, () => { });
+    
+                window.ble.read(device.id, SERVICE_UUID, CHARACTERISTIC_VALVE, (data) => {
+                    console.log('setWatering', getValueFromNotificationData(data));
+                    setWatering(getValueFromNotificationData(data));
+                }, () => { });
+            }
+            readData();
+            const interval = setInterval(readData, 3000);
+            
 
             // clean up on unmount
             return () => {
-                window.ble.stopNotification(device.id, SERVICE_UUID, CHARACTERISTIC_TEMP, () => {}, () => { });
-                window.ble.stopNotification(device.id, SERVICE_UUID, CHARACTERISTIC_TEMP_GROUND, () => {}, () => { });
-                window.ble.stopNotification(device.id, SERVICE_UUID, CHARACTERISTIC_MOISTURE, () => {}, () => { });
-                window.ble.stopNotification(device.id, SERVICE_UUID, CHARACTERISTIC_VALVE, () => {}, () => { });
+                clearInterval(interval);
+                /*console.log('useEffect home goodbye');
+                window.ble.stopNotification(device.id, SERVICE_UUID, CHARACTERISTIC_TEMP, () => {
+                    console.log('stopNotification');
+                }, (error) => {
+                    console.log('stopNotification', error);
+                });
+
+                setTimeout(() => {
+                    window.ble.stopNotification(device.id, SERVICE_UUID, CHARACTERISTIC_TEMP_GROUND, () => {
+                        console.log('stopNotification');
+                    }, (error) => {
+                        console.log('stopNotification', error);
+                    });
+                }, 300);
+
+                setTimeout(() => {
+                    window.ble.stopNotification(device.id, SERVICE_UUID, CHARACTERISTIC_MOISTURE, () => {
+                        console.log('stopNotification');
+                    }, (error) => {
+                        console.log('stopNotification', error);
+                    });
+                }, 600);
+                
+                setTimeout(() => {
+                    window.ble.stopNotification(device.id, SERVICE_UUID, CHARACTERISTIC_VALVE, () => {
+                        console.log('stopNotification');
+                    }, (error) => {
+                        console.log('stopNotification', error);
+                    });
+                }, 900);*/
             };
         }
     }, [connected, device]);
 
     return (
-        <Switch>
-            <Route exact path="/home">
-                { connected && <Dashboard temperature={temperature} temperatureGround={temperatureGround} moisture={moisture} watering={watering} />}
-                <MonthlyGarden />
-            </Route>
-            <Route path="/home/details">
-                { connected && <DiagramContainer temperature={temperature} temperatureGround={temperatureGround} moisture={moisture} watering={watering} /> }
-            </Route>
-        </Switch>
+        <>
+                { connected && !showDiagram && <>
+                    <Dashboard temperature={temperature} temperatureGround={temperatureGround} moisture={moisture} watering={watering} setShowDiagram={setShowDiagram} />
+                    <MonthlyGarden />
+                </>}
+                { connected && showDiagram && <DiagramContainer temperature={temperature} temperatureGround={temperatureGround} moisture={moisture} watering={watering} /> }
+        </>
     );
 }
 

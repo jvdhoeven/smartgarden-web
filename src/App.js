@@ -11,6 +11,8 @@ import HomeContainer from './Containers/Home';
 import SettingsContainer from './Containers/Settings';
 import StartContainer from './Containers/Start';
 import WateringContainer from './Containers/Watering';
+import UIkit from 'uikit'
+import Icons from 'uikit/dist/js/uikit-icons'
 
 function App() {
     const history = useHistory();
@@ -23,6 +25,10 @@ function App() {
     const [device, setDevice] = useState(null);
     const [selectedDevice, setSelectedDevice] = useState(sessionDevice);
     const [devices, setDevices] = useState([]);
+
+    useEffect(() => {
+        UIkit.use(Icons);
+    });
 
     // If a device is stored in localStorage, we can directly navigate to home page
     useEffect(() => {
@@ -83,7 +89,7 @@ function App() {
                 <WateringContainer />
             </Route>
             <Route exact path="/settings">
-                <SettingsContainer />
+                <SettingsContainer device={selectedDevice} />
             </Route>
             <Route exact path="/home">
                 <HomeContainer connected={connected} device={selectedDevice} />
