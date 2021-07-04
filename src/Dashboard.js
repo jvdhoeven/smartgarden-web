@@ -6,7 +6,6 @@ function Dashboard(props) {
     return (
         <div className="uk-section uk-section-small">
             <div className="uk-container">
-                <h2 className="uk-heading-line uk-text-center"><span>Dashboard</span></h2>
                 <div className="uk-child-width-1-2 uk-grid-small uk-grid-match uk-text-center" uk-grid="true">
                     <div>
                         <div className="uk-card uk-card-default uk-card-body">
@@ -42,10 +41,6 @@ function Dashboard(props) {
             <div className="uk-container">
                 <Link className="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom" to="/watering"><i
                     className="fas fa-hand-holding-water"></i> Bewässerung</Link>
-            </div>
-            <div className="uk-container">
-                <Link className="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom" to="/settings"><i
-                    className="fas fa-hand-holding-water"></i> Einstellungen</Link>
             </div>
         </div>
     );

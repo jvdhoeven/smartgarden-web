@@ -37,7 +37,18 @@ var scanInterval = null;
 
 module.exports = {
     scan: function (services, seconds, success, failure) {
-        
+        var i = 1;
+        scanInterval = setInterval(() => {
+            if(i > 10) {
+                return;
+            }
+            success({'name':`Smartgarden Fake ${i}`,"id":"DC:A6:32:99:C4:53","advertising":{},"rssi":-59});
+            i++;
+        }, 400);
+
+        setTimeout(() => {
+            clearInterval(scanInterval);
+        }, seconds * 1000)
     },
 
     startScan: function (services, success, failure) {

@@ -22,6 +22,25 @@ const startApp = () => {
   );
 };
 document.addEventListener('deviceready', startApp, false)
+document.addEventListener('backbutton', () => {
+  console.log('backbutton');
+  window.location.href = '#/home';
+}, false);
+
+window.App = {
+  goToSelect: function() {
+    window.location.href = '#/';
+  },
+  goToHome: function() {
+    window.location.href = '#/home';
+  },
+  goToWatering: function() {
+    window.location.href = '#/watering';
+  },
+  goToSettings: function() {
+    window.location.href = '#/settings';
+  }
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -86,8 +86,6 @@ function SettingsContainer(props) {
     return (
         <div className="uk-section uk-section-small">
             <div className="uk-container">
-                <h2 className="uk-heading-line uk-text-center"><span>Einstellungen</span></h2>
-
                 <form className="uk-form-stacked" onSubmit={handleSubmit}>
                     <div className="uk-margin">
                         <label className="uk-form-label">Datum und Uhrzeit</label>
@@ -114,7 +112,7 @@ function SettingsContainer(props) {
                     </div>
 
                     <div className="uk-margin">
-                        <button className="uk-button uk-button-primary" type="submit">Submit</button>
+                        <button className="uk-button uk-button-primary uk-width-1-1" type="submit">Speichern</button>
                     </div>
                 </form>
             </div>

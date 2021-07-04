@@ -22,7 +22,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "buildApp": "react-scripts build && cp -r build/* ../smartgarden-app-test/www && cd ../smartgarden-app-test && cordova prepare"
+    "buildApp": "react-scripts build",
+    "prepareApps": "rm -rf ../smartgarden-app-test/www/ && cp -r build/ ../smartgarden-app-test/www/ && cd ../smartgarden-app-test && cordova prepare",
+    "buildAndroid": "rm -rf /Users/jvdhoeven/AndroidStudioProjects/Smartgarden/app/src/main/assets/www/ && cp -r ../smartgarden-app-test/platforms/android/app/src/main/assets/www/ /Users/jvdhoeven/AndroidStudioProjects/Smartgarden/app/src/main/assets/www/"
   },
   "eslintConfig": {
     "extends": [

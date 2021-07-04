@@ -67,7 +67,6 @@ function WateringContainer() {
         <Fragment>
             <div className="uk-section uk-section-small">
                 <div className="uk-container">
-                    <h2 className="uk-heading-line uk-text-center"><span>Bewässerung</span></h2>
                     { !activeProgram && <div uk-alert="true">
                         Es ist noch kein Programm aktiv.
                     </div>}
@@ -144,7 +143,7 @@ function WateringContainer() {
                             </div>
                         </div>
                         <div className="uk-margin">
-                            <button className="uk-button uk-button-primary" type="submit">Submit</button>
+                            <button className="uk-button uk-button-primary uk-width-1-1" type="submit">Speichern</button>
                         </div>
                     </form>
                 </div>
