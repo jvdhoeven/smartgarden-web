@@ -1,0 +1,59 @@
+.s-program {
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    
+    padding: 10px 110px 10px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: relative;
+
+    &__name, &__info {
+        padding: 0;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__name {
+        color: #333333;
+        font-size: 18px;
+        margin: 0 0 6px 0;
+    }
+
+    &__info {
+        color: #999999;
+        font-size: 12px;
+        margin: 0;
+    }
+
+    &__active, &__inactive, &__arrow {
+        position: absolute;
+        display: block;
+        top: 50%;
+        transform: translateY(-50%);
+        
+        width: 40px;
+        height: 40px;
+    }
+
+    &__active {
+        right: 60px;
+        background: #C2E189 url(./sprout.png) no-repeat 50% 50%;
+        background-size: 24px 24px;
+        border-radius: 24px;
+    }
+
+    &__inactive {
+        right: 60px;
+        background: #add8e675 url(./sprout.png) no-repeat 50% 50%;
+        background-size: 24px 24px;
+        border-radius: 24px;
+    }
+
+    &__arrow {
+        right: 10px;
+        background: #ffffff url(./chevron-right.png) no-repeat 50% 50%;
+        background-size: 24px 24px;
+    }
+}

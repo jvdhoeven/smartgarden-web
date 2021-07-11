@@ -28,17 +28,24 @@ document.addEventListener('backbutton', () => {
 }, false);
 
 window.App = {
-  goToSelect: function() {
-    window.location.href = '#/';
-  },
-  goToHome: function() {
-    window.location.href = '#/home';
-  },
-  goToWatering: function() {
-    window.location.href = '#/watering';
-  },
-  goToSettings: function() {
-    window.location.href = '#/settings';
+  goTo: function (page) {
+    switch (page) {
+      case 'select':
+        window.location.href = '#/';
+        break;
+      case 'dashboard':
+        window.location.href = '#/home';
+        break;
+      case 'watering':
+        window.location.href = '#/watering';
+        break;
+      case 'settings':
+        window.location.href = '#/settings';
+        break;
+      default:
+        window.location.href = '#/home';
+        break;
+    }
   }
 }
 

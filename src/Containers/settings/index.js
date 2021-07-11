@@ -1,19 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { CHARACTERISTIC_FLOW_RATE, CHARACTERISTIC_LOCATION, SERVICE_UUID } from '../constants';
-import { CHARACTERISTIC_DATE_TIME } from '../constants.js';
-import { getSunrise, getSunset } from 'sunrise-sunset-js';
-
-const bytesToString = (data) => {
-    return String.fromCharCode.apply(null, new Uint8Array(data));
-};
-
-const stringToBytes = (data) => {
-    var array = new Uint8Array(data.length);
-    for (var i = 0, l = data.length; i < l; i++) {
-        array[i] = data.charCodeAt(i);
-     }
-     return array.buffer;
-};
+import { CHARACTERISTIC_FLOW_RATE, CHARACTERISTIC_LOCATION, SERVICE_UUID } from '../../constants';
+import { CHARACTERISTIC_DATE_TIME } from '../../constants.js';
+import { bytesToString, stringToBytes } from '../../helpers/utils';
 
 function SettingsContainer(props) {
     const { device } = props;
@@ -32,14 +20,12 @@ function SettingsContainer(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         
-        window.ble.write(device.id, SERVICE_UUID, CHARACTERISTIC_DATE_TIME, stringToBytes(inputs.dateTime), (data) => {});
         window.ble.write(device.id, SERVICE_UUID, CHARACTERISTIC_LOCATION, stringToBytes(inputs.location), (data) => {});
         window.ble.write(device.id, SERVICE_UUID, CHARACTERISTIC_FLOW_RATE, stringToBytes(inputs.flowRate), (data) => {});
     };
 
     const handleLocation = () => {
         navigator.geolocation.getCurrentPosition((success) => {
-            console.log(getSunrise(success.coords.latitude, success.coords.longitude))
             setLocation(`${success.coords.latitude};${success.coords.longitude}`);
         }, (error) => {
             console.log(error);
@@ -88,26 +74,32 @@ function SettingsContainer(props) {
             <div className="uk-container">
                 <form className="uk-form-stacked" onSubmit={handleSubmit}>
                     <div className="uk-margin">
-                        <label className="uk-form-label">Datum und Uhrzeit</label>
-                        <div className="uk-form-controls">
-                            <input className="uk-input" type="date-time" name="dateTime" value={inputs.dateTime} onChange={handleInputChange} />
-                        </div>
-                    </div>
-
-                    <div className="uk-margin">
-                        <label className="uk-form-label">Location</label>
-                        <div className="uk-form-controls">
-                            <div className="uk-inline uk-width-1-1">
-                                <button type="button" className="uk-form-icon uk-form-icon-flip" uk-icon="icon: location" onClick={handleLocation}></button>
-                                <input className="uk-input" type="text" name="location" value={inputs.location} onChange={handleInputChange} />
+                        <div className="uk-card uk-card-default uk-card-small uk-card-body">
+                            <label className="uk-form-label uk-text-bold">Datum und Uhrzeit</label>
+                            <div className="uk-form-controls uk-margin-small-top">
+                                <input className="uk-input" type="date-time" name="dateTime" disabled="true" value={inputs.dateTime} />
                             </div>
                         </div>
                     </div>
 
                     <div className="uk-margin">
-                        <label className="uk-form-label">Flußrate</label>
-                        <div className="uk-form-controls">
-                            <input className="uk-input" type="text" name="flowRate" value={inputs.flowRate} onChange={handleInputChange} />
+                        <div className="uk-card uk-card-default uk-card-small uk-card-body">
+                            <label className="uk-form-label uk-text-bold">Standort des Geräts</label>
+                            <div className="uk-form-controls uk-margin-small-top">
+                                <div className="uk-inline uk-width-1-1">
+                                    <button type="button" className="uk-form-icon uk-form-icon-flip" uk-icon="icon: location" onClick={handleLocation}></button>
+                                    <input className="uk-input" type="text" name="location" value={inputs.location} onChange={handleInputChange} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="uk-margin">
+                        <div className="uk-card uk-card-default uk-card-small uk-card-body">
+                            <label className="uk-form-label uk-text-bold">Flussrate in Liter/Minute</label>
+                            <div className="uk-form-controls uk-margin-small-top">
+                                <input className="uk-input" type="text" name="flowRate" value={inputs.flowRate} onChange={handleInputChange} />
+                            </div>
                         </div>
                     </div>
 

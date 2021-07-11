@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
@@ -20,11 +21,13 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:android": "npm run build && npm run prepare && npm run copy:android",
+    "build:ios": "npm run build && npm run prepare && npm run copy:ios",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "buildApp": "react-scripts build",
-    "prepareApps": "rm -rf ../smartgarden-app-test/www/ && cp -r build/ ../smartgarden-app-test/www/ && cd ../smartgarden-app-test && cordova prepare",
-    "buildAndroid": "rm -rf /Users/jvdhoeven/AndroidStudioProjects/Smartgarden/app/src/main/assets/www/ && cp -r ../smartgarden-app-test/platforms/android/app/src/main/assets/www/ /Users/jvdhoeven/AndroidStudioProjects/Smartgarden/app/src/main/assets/www/"
+    "prepare": "rm -rf ../smartgarden-app-test/www/ && cp -r build/ ../smartgarden-app-test/www/ && cd ../smartgarden-app-test && cordova prepare",
+    "copy:android": "rm -rf /Users/jvdhoeven/AndroidStudioProjects/Smartgarden/app/src/main/assets/www/ && cp -r ../smartgarden-app-test/platforms/android/app/src/main/assets/www/ /Users/jvdhoeven/AndroidStudioProjects/Smartgarden/app/src/main/assets/www/",
+    "copy:ios": "rm -rf ../smartgarden-ios/Smartgarden/www && cp -r ../smartgarden-app-test/platforms/ios/www/ ../smartgarden-ios/Smartgarden/www"
   },
   "eslintConfig": {
     "extends": [

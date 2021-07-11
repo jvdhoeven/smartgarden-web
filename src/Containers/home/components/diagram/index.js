@@ -1,18 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/dist/chart';
 import UIkit from 'uikit';
 
-let chart;
+let chart = null;
 
 function Diagram(props) {
-    const { temperature, temperatureGround, moisture } = props;
+    const { temperatures, temperaturesGround, moistures, onCancel } = props;
     const chartRef = useRef(null);
     const modalRef = useRef(null);
-    const [ temps, setTemps ] = useState([]);
-    const [ tempsGround, setTempsGround ] = useState([]);
-    const [ moist, setMoist ] = useState([]);
 
     useEffect(() => {
+        window.smartgarden.changeTitle("Details");
+
         const options = {
             animation: false,
             scales: {
@@ -20,6 +19,8 @@ function Diagram(props) {
                     type: 'linear',
                     display: true,
                     position: 'left',
+                    min: -20,
+                    max: 40,
                     ticks: {
                         callback: function (value, index, values) {
                             return `${value} °C`;
@@ -30,6 +31,8 @@ function Diagram(props) {
                     type: 'linear',
                     display: true,
                     position: 'right',
+                    min: 0,
+                    max: 100,
                     ticks: {
                         callback: function (value, index, values) {
                             return `${value} %`;
@@ -47,17 +50,17 @@ function Diagram(props) {
             type: 'line',
             data: {
                 datasets: [{
-                    label: 'Temperature 1',
+                    label: 'Luft',
                     yAxisID: 'y',
                     backgroundColor: 'rgba(255, 0, 0, 0.3)',
                     borderColor: 'rgba(255, 0, 0, 0.4)',
                 }, {
-                    label: 'Temperature 2',
+                    label: 'Boden',
                     yAxisID: 'y',
                     backgroundColor: 'rgba(0, 255, 0, 0.3)',
                     borderColor: 'rgba(0, 255, 0, 0.4)',
                 }, {
-                    label: 'Moist',
+                    label: 'Feuchtigkeit',
                     yAxisID: 'y1',
                     backgroundColor: 'rgba(0, 0, 255, 0.3)',
                     borderColor: 'rgba(0, 0, 255, 0.4)',
@@ -71,25 +74,20 @@ function Diagram(props) {
     }, []);
 
     useEffect(() => {
-        if(temperature && temperatureGround && moisture) {
-            setTemps([...temps, temperature]);
-            setTempsGround([...tempsGround, temperatureGround]);
-            setMoist([...moist, moisture]);
-            chart.data.labels = temps.slice(Math.max(temps.length - 20, 0)).map((label, i) => i);
-            chart.data.datasets[0].data = temps.slice(Math.max(temps.length - 20, 0));
-            chart.data.datasets[1].data = tempsGround.slice(Math.max(tempsGround.length - 20, 0));
-            chart.data.datasets[2].data = moist.slice(Math.max(moist.length - 20, 0));
-            chart.update();
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [temperature]);
+        chart.data.labels = temperatures.slice(Math.max(temperatures.length - 20, 0)).map((label, i) => i);
+        chart.data.datasets[0].data = temperatures.slice(Math.max(temperatures.length - 20, 0));
+        chart.data.datasets[1].data = temperaturesGround.slice(Math.max(temperaturesGround.length - 20, 0));
+        chart.data.datasets[2].data = moistures.slice(Math.max(moistures.length - 20, 0));
+        chart.update();
+    }, [moistures, temperatures, temperaturesGround]);
 
     return (
         <div className="uk-section uk-section-small">
             <div className="uk-container">
-                <h2 className="uk-heading-line uk-text-center"><span>Details</span></h2>
-
-                <canvas style={{height: '80vh'}} ref={chartRef}></canvas>
+                <canvas style={{height: '60vh'}} ref={chartRef}></canvas>
+                <div className="uk-margin">
+                    <button className="uk-button uk-button-default uk-width-1-1" type="button" onClick={onCancel}>Zurück</button>
+                </div>
             </div>
         </div>
     );

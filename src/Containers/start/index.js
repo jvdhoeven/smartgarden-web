@@ -1,48 +1,39 @@
-import React, { createRef, useState } from 'react';
+import React, { useState } from 'react';
 import DeviceItem from './components/device-item';
+import DeviceConnecting from './components/device-connecting';
 import DeviceLoading from './components/device-loading';
 
 import './styles.scss';
+import DeviceNotFound from './components/device-not-found';
 
-function Start(props) {
+function StartContainer(props) {
     const { isScanning, scan, devices, selectDevice } = props;
-    const [ selectedDevice, setSelectedDevice ] = useState(null);
-    const modal = createRef();
+    const [ connecting, setConnecting] = useState(false);
 
     const handleDeviceClick = (device) => {
-        setSelectedDevice(device);
-    }
-
-    const confirmModal = (save) => {
-        selectDevice(selectedDevice, save);
+        const save = window.confirm("Möchtest Du Dich beim nächsten mal direkt mit diesem Gerät verbinden?");
+        if (save) {
+            localStorage.setItem('deviceId', JSON.stringify(device));
+        }
+        setConnecting(true);
+        selectDevice(device);
     }
 
     return (
-        <>
+        <div className="uk-section uk-section-small">
+            <div className="uk-container">
+            { connecting && <DeviceConnecting /> }
             { isScanning && <DeviceLoading /> }
-            { !isScanning && devices.length === 0 && <div className="s-not-found">
-                <span className="s-not-found__icon"></span>
-                <span className="s-not-found__text">Keine Geräte gefunden</span>
-            </div> }
+            { !isScanning && devices.length === 0 && <DeviceNotFound /> }
             { devices.length > 0 &&  <div>
                 { devices.map(device => <DeviceItem device={device} key={device.name} onClick={() => { handleDeviceClick(device); }}/> ) }
             </div> }
             { !isScanning && <button className="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" onClick={() => { scan(); }}>
                 <span><i className="fas fa-redo"></i> Erneut suchen</span>
             </button> }
-
-            { selectedDevice && <div ref={modal} uk-modal="true" className="uk-open" style={{display: 'block'}}>
-                <div className="uk-modal-dialog uk-modal-body">
-                    <h2 className="uk-modal-title">Gerät</h2>
-                    <p>Möchtest Du Dich beim nächsten mal direkt mit diesem Gerät verbinden?</p>
-                    <p className="uk-text-right">
-                        <button className="uk-button uk-button-default" type="button" onClick={function () { confirmModal(false); }}>Nein</button>
-                        <button className="uk-button uk-button-primary" type="button" onClick={function () { confirmModal(true); }}>Ja</button>
-                    </p>
-                </div>
-            </div>}
-        </>
+            </div>
+        </div>
     );
 }
 
-export default Start;
+export default StartContainer;

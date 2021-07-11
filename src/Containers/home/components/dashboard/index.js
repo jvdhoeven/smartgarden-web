@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 function Dashboard(props) {
-    const { temperature, temperatureGround, moisture, watering, setShowDiagram } = props;
+    const { temperature, temperatureGround, moisture, watering, setShowDiagram, handleValveClick } = props;
+
     return (
         <div className="uk-section uk-section-small">
             <div className="uk-container">
@@ -26,9 +27,9 @@ function Dashboard(props) {
                         </div>
                     </div>
                     <div>
-                        <div className="uk-card uk-card-default uk-card-body">
+                        <div className="uk-card uk-card-default uk-card-body" onClick={handleValveClick}>
                             <span className="uk-display-block uk-text-large"><i className="fas fa-power-off"></i></span>
-                            <span className="uk-h4">{watering}</span>
+                            <span className="uk-h4">{watering === "0" ? "Aus" : "An"}</span>
                         </div>
                     </div>
                 </div>

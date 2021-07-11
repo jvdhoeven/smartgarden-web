@@ -181,6 +181,8 @@ module.exports = {
     read: function (device_id, service_uuid, characteristic_uuid, success, failure) {
         if(characteristic_uuid === '9a0c0611-a48f-4dbc-bde2-31582e606ee5') {
             success(stringToArrayBuffer(`${Number(Math.random() * 100).toFixed(2)}`));
+        } else if(characteristic_uuid === '6bef33fc-dadc-408e-98e9-d6c8cb35e976') {
+            success(stringToArrayBuffer("50.93333;6.95"));
         } else {
             success(stringToArrayBuffer(`${Number(Math.random() * 15).toFixed(2)}`));
         }
