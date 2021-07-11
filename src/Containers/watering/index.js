@@ -67,11 +67,14 @@ function WateringContainer(props) {
 
   const saveActiveProgram = () => {
     const program = programs[getActiveProgram() - 1];
+    let start = program.startTime.replace(":", "");
+    if (program.mode === "2") {start = "9999"};
+    if (program.mode === "1") {start = "8888"};
     window.ble.write(
       device.id,
       SERVICE_UUID,
       CHARACTERISTIC_PROGRAM,
-      stringToBytes(`${program.startTime.replace(":", "")};${program.duration * 60};${
+      stringToBytes(`${start};${program.duration * 60};${
         program.interval
       };${program.smart ? "1" : "0"}`),
       () => {},

@@ -42,14 +42,14 @@
 
   &__active {
     right: 60px;
-    background: #c2e189 url(./sprout.png) no-repeat 50% 50%;
+    background: #c2e189 url(./radiobox-marked.png) no-repeat 50% 50%;
     background-size: 24px 24px;
     border-radius: 24px;
   }
 
   &__inactive {
     right: 60px;
-    background: #add8e675 url(./sprout.png) no-repeat 50% 50%;
+    background: #add8e675 url(./radiobox-blank.png) no-repeat 50% 50%;
     background-size: 24px 24px;
     border-radius: 24px;
   }
