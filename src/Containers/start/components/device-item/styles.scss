@@ -1,52 +1,54 @@
 .s-device {
-    background-color: white;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    
-    padding: 10px 60px 10px 70px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    position: relative;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 
-    &__name, &__info {
-        padding: 0;
+  padding: 10px 60px 10px 70px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  position: relative;
 
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+  &__name,
+  &__info {
+    padding: 0;
 
-    &__name {
-        color: #333333;
-        font-size: 18px;
-        margin: 0 0 6px 0;
-    }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-    &__info {
-        color: #999999;
-        font-size: 12px;
-        margin: 0;
-    }
+  &__name {
+    color: #333333;
+    font-size: 18px;
+    margin: 0 0 6px 0;
+  }
 
-    &__icon, &__arrow {
-        position: absolute;
-        display: block;
-        top: 50%;
-        transform: translateY(-50%);
-        
-        width: 40px;
-        height: 40px;
-    }
+  &__info {
+    color: #999999;
+    font-size: 12px;
+    margin: 0;
+  }
 
-    &__icon {
-        left: 10px;
-        background: #C2E189 url(./sprout.png) no-repeat 50% 50%;
-        background-size: 24px 24px;
-        border-radius: 24px;
-    }
+  &__icon,
+  &__arrow {
+    position: absolute;
+    display: block;
+    top: 50%;
+    transform: translateY(-50%);
 
-    &__arrow {
-        right: 10px;
-        background: #ffffff url(./chevron-right.png) no-repeat 50% 50%;
-        background-size: 24px 24px;
-    }
+    width: 40px;
+    height: 40px;
+  }
+
+  &__icon {
+    left: 10px;
+    background: #c2e189 url(./sprout.png) no-repeat 50% 50%;
+    background-size: 24px 24px;
+    border-radius: 24px;
+  }
+
+  &__arrow {
+    right: 10px;
+    background: #ffffff url(./chevron-right.png) no-repeat 50% 50%;
+    background-size: 24px 24px;
+  }
 }
